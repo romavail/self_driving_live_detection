@@ -86,12 +86,12 @@ def download_file(file_path):
 def run_the_app():
     # To make Streamlit fast, st.cache allows us to reuse computation across runs.
     # In this common pattern, we download data from an endpoint only once.
-    @st.cache_data
+    @st.cache
     def load_metadata(url):
         return pd.read_csv(url)
 
     # This function uses some Pandas magic to summarize the metadata Dataframe.
-    @st.cache_data
+    @st.cache
     def create_summary(metadata):
         one_hot_encoded = pd.get_dummies(metadata[["frame", "label"]], columns=["label"])
         summary = one_hot_encoded.groupby(["frame"]).sum().rename(columns={
@@ -204,7 +204,7 @@ def get_file_content_as_string(path):
 
 # This function loads an image from Streamlit public repo on S3. We use st.cache on this
 # function as well, so we can reuse the images across runs.
-@st.cache_data(show_spinner=False)
+@st.cache(show_spinner=False)
 def load_image(url):
     with urllib.request.urlopen(url) as response:
         image = np.asarray(bytearray(response.read()), dtype="uint8")
